@@ -16,6 +16,18 @@ export default function CreateDAOPage() {
     treasuryAddress: ''
   });
 
+  const [isCreating, setIsCreating] = useState(false);
+  const handleCreateDao = (e) => {
+    e.preventDefault();
+    setIsCreating(true);
+    // Here you would typically call an API to join the DAO
+    // For now, we'll just simulate the join process
+    setTimeout(() => {
+      alert(`Successfully Created !`);
+      setIsCreating(false);
+    }, 1500);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -44,6 +56,7 @@ export default function CreateDAOPage() {
     console.log('Creating DAO:', formData);
     // Redirect to new DAO page or projects list
   };
+  
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto mt-10">
@@ -91,32 +104,32 @@ export default function CreateDAOPage() {
             </div>
 
             <div>
-              <label htmlFor="website" className="block text-sm font-medium text-gray-300 mb-1">Website</label>
+              <label htmlFor="website" className="block text-sm font-medium text-gray-300 mb-1">Membership Fees</label>
               <input
-                type="url"
-                id="website"
-                name="website"
+                type="text"
+                id="membershipFees"
+                name="memberhsipFees"
                 value={formData.website}
                 onChange={handleChange}
                 className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="https://"
+                placeholder="$"
               />
             </div>
 
             <div>
-              <label htmlFor="logo" className="block text-sm font-medium text-gray-300 mb-1">Logo URL</label>
+              <label htmlFor="logo" className="block text-sm font-medium text-gray-300 mb-1">Threshold</label>
               <input
-                type="url"
-                id="logo"
-                name="logo"
+                type="text"
+                id="threshold"
+                name="threshold"
                 value={formData.logo}
                 onChange={handleChange}
                 className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="https://"
+                placeholder="$"
               />
             </div>
 
-            <div>
+            {/* <div>
               <label htmlFor="tags" className="block text-sm font-medium text-gray-300 mb-1">Tags</label>
               <input
                 type="text"
@@ -140,7 +153,7 @@ export default function CreateDAOPage() {
                   </span>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Governance */}
@@ -215,12 +228,35 @@ export default function CreateDAOPage() {
           </div>
 
           <div className="pt-4">
-            <button
-              type="submit"
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-medium py-3 px-6 rounded-lg shadow-lg transition-all duration-300"
-            >
-              Create DAO
-            </button>
+            
+            {/* Create DAO Button - Bottom Row */}
+        <div className="mt-3">
+          <button
+            onClick={handleCreateDao}
+            disabled={isCreating}
+            type="submit"
+            className={`w-full ${
+              isCreating 
+                ? 'bg-gray-600 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600'
+            } text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2`}
+          >
+            {isCreating ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Creating...
+              </>
+            ) : (
+              <>
+                
+                Create DAO
+              </>
+            )}
+          </button>
+        </div>
           </div>
         </form>
       </div>

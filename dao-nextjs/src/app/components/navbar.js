@@ -24,7 +24,7 @@ const navbar = () => {
             Organisations
             <div className="h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
           </a>
-          <a href="#" className="text-white hover:text-cyan-400 transition-colors font-medium group">
+          <a href="#about" className="text-white hover:text-cyan-400 transition-colors font-medium group">
             About
             <div className="h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
           </a>

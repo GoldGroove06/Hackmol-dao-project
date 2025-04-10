@@ -66,6 +66,18 @@ export default function ProposeProject() {
             required
           />
         </div>
+        <div>
+          <label htmlFor="duration" className="block text-sm font-medium text-gray-300 mb-2">
+            Github Repository Link
+          </label>
+          <input
+            type="url"
+            id="link"
+            
+            className="w-full bg-gray-700 text-white p-3 rounded-lg border border-gray-600 focus:border-purple-500 focus:ring-purple-500"
+            required
+          />
+        </div>
 
         <div className="flex justify-end gap-4">
           <button

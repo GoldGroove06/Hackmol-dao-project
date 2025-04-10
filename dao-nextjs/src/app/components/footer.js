@@ -40,26 +40,26 @@ const footer = () => {
             <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">Home</a></li>
             <li><a href="#ourproduct" className="text-gray-400 hover:text-cyan-400 transition-colors">Products</a></li>
             <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">About</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">Roadmap</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">Whitepaper</a></li>
+            <li><a href="#contact" className="text-gray-400 hover:text-cyan-400 transition-colors">Contact</a></li>
+           
           </ul>
         </div>
         
         {/* <!-- Resources --> */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-6">Resources</h3>
+          <h3 className="text-lg font-semibold text-white mb-6">Follow Us</h3>
           <ul className="space-y-3">
-            <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">Documentation</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">API Reference</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">Smart Contracts</a></li>
+            <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">LinkedIn</a></li>
+            <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">Discord</a></li>
+            <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">Telegram</a></li>
             <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">GitHub</a></li>
-            <li><a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">Blog</a></li>
+
           </ul>
         </div>
         
         {/* <!-- Newsletter --> */}
         <div>
-          <h3 className="text-lg font-semibold text-white mb-6">Stay Updated</h3>
+          <h3 className="text-lg font-semibold text-white mb-6"></h3>
           <p className="text-gray-400 mb-4">
             Subscribe to our newsletter for the latest updates, product launches, and community events.
           </p>

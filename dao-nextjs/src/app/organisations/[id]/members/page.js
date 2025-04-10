@@ -33,7 +33,7 @@ export default function OrganisationMembers() {
           },
           {
             id: 2,
-            name: "RizzDev Governance Portal",
+            name: "Governance Portal",
             description: "Voting and proposal system",
             category: "Governance",
             votes: 78,
@@ -93,13 +93,13 @@ export default function OrganisationMembers() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6 mt-15">
+    <div className="min-h-screen bg-gray-900 text-white p-6 mt-15 select-auto">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">DAO Projects</h1>
+        <h1 className="text-3xl font-bold mb-8 cursor-text">DAO Projects</h1>
         
         {/* Funded Projects Section */}
         <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-6 text-green-400">Funded Projects</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-green-400 cursor-text">Funded Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.filter(p => p.isFunded).map(project => (
               <ProjectCard 
@@ -107,6 +107,7 @@ export default function OrganisationMembers() {
                 project={project} 
                 isFunded={true} 
                 onVote={handleVote}
+                id={id}
               />
             ))}
             
@@ -118,7 +119,7 @@ export default function OrganisationMembers() {
 
         {/* Non-Funded Projects Section */}
         <section>
-          <h2 className="text-2xl font-semibold mb-6 text-yellow-400">Projects Needing Votes</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-yellow-400 cursor-text">Projects Needing Votes</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.filter(p => !p.isFunded).map(project => (
               <ProjectCard 
@@ -126,6 +127,7 @@ export default function OrganisationMembers() {
                 project={project} 
                 isFunded={false} 
                 onVote={handleVote}
+                id={id}
               />
             ))}
             
@@ -139,19 +141,25 @@ export default function OrganisationMembers() {
   );
 }
 
-function ProjectCard({ project, isFunded, onVote, id }) {  // Receive id as prop
-    const progress = Math.min((project.votes / project.threshold) * 100, 100);
-    
-    return (
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-purple-500 transition-all">
-        {/* ... other card content ... */}
-        
-        <Link 
+function ProjectCard({ project, isFunded, onVote, id }) {
+  const progress = Math.min((project.votes / project.threshold) * 100, 100);
+
+  // Debug: Check if IDs are correct
+  console.log("LINK HREF:", `/organisations/${id}/members/${project.id}`);
+
+  return (
+    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-purple-500 transition-all cursor-default select-text">
+      <h3 className="text-xl font-semibold cursor-text">{project.name}</h3>
+      <p className="text-gray-300 cursor-text">{project.description}</p>
+
+      {/* View Details Link (fixed) */}
+      <Link
         href={`/organisations/${id}/members/${project.id}`}
-        className="mt-2 inline-block text-sm text-purple-400 hover:text-purple-300 transition-colors mb-4"
+        className="mt-2 inline-block select-text text-sm text-purple-400 hover:text-purple-300 transition-colors mb-4 cursor-pointer"
       >
         View Details →
       </Link>   
+        <div>
         {isFunded ? (
           <div className="mb-4">
             <p className="text-green-400 font-medium">Funded: {project.fundedAmount}</p>
@@ -172,6 +180,7 @@ function ProjectCard({ project, isFunded, onVote, id }) {  // Receive id as prop
             <p className="text-sm text-gray-400 mt-2">Requesting: {project.requestedAmount}</p>
           </div>
         )}
+        </div>
         
         {!isFunded && (
           <button
