@@ -7,4 +7,10 @@ module.exports = {
       chainId: 31337, // Default Hardhat Network ID
     },
   },
+  settings: {
+    optimizer: {
+      enabled: true,
+      runs: 200,
+    },
+  },
 };
