@@ -144,7 +144,7 @@ export default function CreateDAOPage() {
           </div>
 
           {/* Governance */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h2 className="text-xl font-semibold text-white border-b border-gray-700 pb-2">Governance Settings</h2>
             
             <div>
@@ -194,7 +194,7 @@ export default function CreateDAOPage() {
                 />
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Treasury */}
           <div className="space-y-4">
