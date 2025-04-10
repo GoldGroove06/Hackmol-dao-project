@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { getOrganizationDAOs, getDAO } from '@/lib/contract';
 import { ethers } from 'ethers';
 import { getContract, createDAO } from '@/lib/contract';
 
@@ -19,6 +20,7 @@ export default function Home() {
   const [success, setSuccess] = useState('');
 //   get dao part
   const [daos, setDaos] = useState([]);
+  const [daosId, setDaosId] = useState([]);
 //   const [loading, setLoading] = useState(false);
 //   const [error, setError] = useState('');
 
@@ -73,7 +75,7 @@ export default function Home() {
         membershipFeeWei,
         proposalThreshold
       );
-
+      
       setSuccess(`DAO created successfully! Transaction hash: ${txHash}`);
       
       // Reset form
@@ -117,15 +119,20 @@ export default function Home() {
       const accounts = await window.ethereum.request({ 
         method: 'eth_requestAccounts' 
       });
-      const organizationAddress = accounts[0];
-
+    //   const organizationAddress = wallet.address;
+      console.log(wallet.address) 
       // Get all DAOs with full details
-      const daosWithDetails = await getOrganizationDAOsWithDetails(
+      const daosIDsOfUser = await getOrganizationDAOs(
         provider,
-        organizationAddress
+        wallet.address
       );
       
-      setDaos(daosWithDetails);
+      setDaosId(daosIDsOfUser);
+      console.log('DAO IDs:', daosIDsOfUser);
+      for (let i = 0; i < daosIDsOfUser.length; i++) {
+        const daoDetails = await getDAO(provider, daosIDsOfUser[i]);
+        setDaos((prevDaos) => [...prevDaos, daoDetails]);
+      }
       setError('');
     } catch (err) {
       console.error('Error fetching DAOs:', err);
@@ -136,17 +143,17 @@ export default function Home() {
   };
 
   // Function to fetch a single DAO
-  const fetchDAO = async (daoId) => {
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const daoDetails = await getDAO(provider, daoId);
-      console.log('DAO Details:', daoDetails);
-      return daoDetails;
-    } catch (err) {
-      console.error('Error fetching DAO:', err);
-      setError(err.message);
-    }
-  };
+//   const fetchDAO = async (daoId) => {`   
+//     try {
+//       const provider = new ethers.BrowserProvider(window.ethereum);
+//       const daoDetails = await getDAO(provider, daoId);
+//       console.log('DAO Details:', daoDetails);
+//       return daoDetails;
+//     } catch (err) {
+//       console.error('Error fetching DAO:', err);
+//       setError(err.message);
+//     }
+//   };
 
   return (
     <div className="min-h-screen p-8">
