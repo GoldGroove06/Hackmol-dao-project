@@ -1,7 +1,17 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
 import Footer from "./components/footer";
 import Navbar from "./components/navbar";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,6 +30,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+
+<ClerkProvider
+    webAuthn={{
+      networkConfigs: {
+        hardhat: {
+          chainId: "31337", // Hardhat's default chain ID
+          rpcUrl: "http://127.0.0.1:8545",
+        },
+      },
+    }}>
     <html lang="en">
   <body
     className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -32,6 +52,15 @@ export default function RootLayout({ children }) {
             <div className="absolute -top-1/2 -left-1/4 w-full h-full bg-gradient-to-r from-purple-500/5 to-blue-500/5 rounded-full filter blur-3xl opacity-20"></div>
             <div className="absolute top-1/2 right-0 w-1/2 h-1/2 bg-gradient-to-l from-pink-500/10 to-cyan-500/10 rounded-full filter blur-3xl opacity-30"></div>
           </div>
+          <header className="flex justify-end items-center p-4 gap-4 h-16">
+            <SignedOut>
+              <SignInButton />
+              <SignUpButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </header>
           <Navbar />
           <div className="">{children}</div>
           <Footer />
@@ -40,5 +69,6 @@ export default function RootLayout({ children }) {
     </div>
   </body>
 </html>
+</ClerkProvider>
   );
 }
