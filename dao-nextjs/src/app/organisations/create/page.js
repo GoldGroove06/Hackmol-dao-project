@@ -2,19 +2,29 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { getOrganizationDAOs, getDAO } from '@/lib/contract';
+import { ethers } from 'ethers';
+import { getContract, createDAO } from '@/lib/contract';
 
 export default function CreateDAOPage() {
+
+
+  const [wallet, setWallet] = useState({
+    address: '',
+    signer: null,
+    connected: false
+  });
   const [formData, setFormData] = useState({
     name: '',
-    description: '',
-    website: '',
-    logo: '',
-    tags: [],
-    governanceToken: '',
-    votingPeriod: '3', // days
-    quorum: '5', // %
-    treasuryAddress: ''
+    membershipFee: '',
+    proposalThreshold: ''
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+//   get dao part
+  const [daos, setDaos] = useState([]);
+  const [daosId, setDaosId] = useState([]);
 
   const [isCreating, setIsCreating] = useState(false);
   const handleCreateDao = (e) => {
@@ -28,10 +38,7 @@ export default function CreateDAOPage() {
     }, 1500);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  
 
   const handleTagAdd = (e) => {
     if (e.key === 'Enter' && e.target.value) {
@@ -50,17 +57,144 @@ export default function CreateDAOPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle DAO creation logic here
-    console.log('Creating DAO:', formData);
-    // Redirect to new DAO page or projects list
-  };
   
+  
+  // Connect wallet function
+  const connectWallet = async () => {
+    try {
+      if (typeof window.ethereum === 'undefined') {
+        throw new Error('Please install MetaMask to use this application');
+      }
+
+      // Request account access
+      const accounts = await window.ethereum.request({ 
+        method: 'eth_requestAccounts' 
+      });
+      
+      // Get provider and signer
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      
+      setWallet({
+        address: accounts[0],
+        signer: signer,
+        connected: true
+      });
+      
+      setError('');
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      if (!wallet.connected) {
+        throw new Error('Please connect your wallet first');
+      }
+
+      // Convert values to proper format
+      const membershipFeeWei = ethers.parseEther(formData.membershipFee);
+      const proposalThreshold = ethers.parseUnits(formData.proposalThreshold, 0); // Assuming it's a whole number
+
+      // Create DAO
+      const txHash = await createDAO(
+        wallet.signer,
+        formData.name,
+        membershipFeeWei,
+        proposalThreshold
+      );
+      
+      setSuccess(`DAO created successfully! Transaction hash: ${txHash}`);
+      
+      // Reset form
+      setFormData({
+        name: '',
+        membershipFee: '',
+        proposalThreshold: ''
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle input changes
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+// start of get doas and extra and up is the createdao part
+  // Connect wallet and fetch DAOs
+  const connectAndFetchDAOs = async () => {
+    if (typeof window.ethereum === 'undefined') {
+      setError('Please install MetaMask to use this application');
+      return;
+    }
+    await fetchOrganizationDAOs();
+  };
+
+  // Function to fetch all DAOs for an organization
+  const fetchOrganizationDAOs = async () => {
+    setLoading(true);
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      
+      // Get the connected wallet address
+      const accounts = await window.ethereum.request({ 
+        method: 'eth_requestAccounts' 
+      });
+    //   const organizationAddress = wallet.address;
+      console.log(wallet.address) 
+      // Get all DAOs with full details
+      const daosIDsOfUser = await getOrganizationDAOs(
+        provider,
+        wallet.address
+      );
+      
+      setDaosId(daosIDsOfUser);
+      console.log('DAO IDs:', daosIDsOfUser);
+      for (let i = 0; i < daosIDsOfUser.length; i++) {
+        const daoDetails = await getDAO(provider, daosIDsOfUser[i]);
+        setDaos((prevDaos) => [...prevDaos, daoDetails]);
+      }
+      setError('');
+    } catch (err) {
+      console.error('Error fetching DAOs:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto mt-10">
+       
       <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 p-8">
+      <div className="mb-8">
+        {!wallet.connected ? (
+          <button
+            onClick={connectWallet}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 cursor-pointer"
+          >
+            Connect Wallet
+          </button>
+        ) : (
+          <div className="text-green-600">
+            Connected: {wallet.address}
+          </div>
+        )}
+      </div>
         <div className="mb-8">
           <Link href="/projects" className="inline-flex items-center text-purple-400 hover:text-purple-300 mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -91,11 +225,12 @@ export default function CreateDAOPage() {
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-1">Description *</label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
+              <label htmlFor="membershipfee" className="block text-sm font-medium text-gray-300 mb-1">Membership fee *</label>
+              <input 
+                type="number"
+                id="membershipFee"
+                name="membershipFee"
+                value={formData.membershipFee}
                 onChange={handleChange}
                 rows={3}
                 className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
@@ -104,19 +239,19 @@ export default function CreateDAOPage() {
             </div>
 
             <div>
-              <label htmlFor="website" className="block text-sm font-medium text-gray-300 mb-1">Membership Fees</label>
+              <label htmlFor="ProposalThreshold" className="block text-sm font-medium text-gray-300 mb-1">Propsal Threshold</label>
               <input
-                type="text"
-                id="membershipFees"
-                name="memberhsipFees"
-                value={formData.website}
+                type="number"
+                id="proposalThreshold"
+                name="proposalThreshold"
+                value={formData.proposalThreshold}
                 onChange={handleChange}
                 className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="$"
               />
             </div>
 
-            <div>
+            {/* <div>
               <label htmlFor="logo" className="block text-sm font-medium text-gray-300 mb-1">Threshold</label>
               <input
                 type="text"
@@ -127,7 +262,7 @@ export default function CreateDAOPage() {
                 className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="$"
               />
-            </div>
+            </div> */}
 
             {/* <div>
               <label htmlFor="tags" className="block text-sm font-medium text-gray-300 mb-1">Tags</label>
@@ -210,7 +345,7 @@ export default function CreateDAOPage() {
           </div> */}
 
           {/* Treasury */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h2 className="text-xl font-semibold text-white border-b border-gray-700 pb-2">Treasury</h2>
             
             <div>
@@ -225,13 +360,21 @@ export default function CreateDAOPage() {
                 placeholder="0x..."
               />
             </div>
-          </div>
+          </div> */}
 
           <div className="pt-4">
             
             {/* Create DAO Button - Bottom Row */}
         <div className="mt-3">
-          <button
+        <button
+          type="submit"
+          disabled={loading || !wallet.connected}
+          className={`bg-blue-500 text-white px-4 py-2 rounded w-full
+            ${(loading || !wallet.connected) ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
+          {loading ? 'Creating DAO...' : 'Create DAO'}
+        </button>
+          {/* <button
             onClick={handleCreateDao}
             disabled={isCreating}
             type="submit"
@@ -255,10 +398,21 @@ export default function CreateDAOPage() {
                 Create DAO
               </>
             )}
-          </button>
+          </button> */}
         </div>
           </div>
         </form>
+         {/* Error and Success Messages */}
+      {error && (
+        <div className="mt-4 text-red-600">
+          Error: {error}
+        </div>
+      )}
+      {success && (
+        <div className="mt-4 text-green-600">
+          {success}
+        </div>
+      )}
       </div>
     </div>
   );
