@@ -52,15 +52,7 @@ export default function RootLayout({ children }) {
             <div className="absolute -top-1/2 -left-1/4 w-full h-full bg-gradient-to-r from-purple-500/5 to-blue-500/5 rounded-full filter blur-3xl opacity-20"></div>
             <div className="absolute top-1/2 right-0 w-1/2 h-1/2 bg-gradient-to-l from-pink-500/10 to-cyan-500/10 rounded-full filter blur-3xl opacity-30"></div>
           </div>
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
+          
           <Navbar />
           <div className="">{children}</div>
           <Footer />
