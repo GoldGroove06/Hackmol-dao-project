@@ -144,52 +144,54 @@ export default function OrganisationMembers() {
 function ProjectCard({ project, isFunded, onVote, id }) {
   const progress = Math.min((project.votes / project.threshold) * 100, 100);
 
-  // Debug: Check if IDs are correct
-  console.log("LINK HREF:", `/organisations/${id}/members/${project.id}`);
-
   return (
-    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-purple-500 transition-all cursor-default select-text">
-      <h3 className="text-xl font-semibold cursor-text">{project.name}</h3>
-      <p className="text-gray-300 cursor-text">{project.description}</p>
+    <div className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-purple-500 transition-all relative">
+      {/* Remove cursor-text and select-text from these elements */}
+      <h3 className="text-xl font-semibold">{project.name}</h3>
+      <p className="text-gray-300 mb-4">{project.description}</p>
 
-      {/* View Details Link (fixed) */}
+      {/* View Details Link - simplified */}
       <Link
         href={`/organisations/${id}/members/${project.id}`}
-        className="mt-2 inline-block select-text text-sm text-purple-400 hover:text-purple-300 transition-colors mb-4 cursor-pointer"
+        className="inline-block text-sm text-purple-400 hover:text-purple-300 transition-colors mb-4"
       >
         View Details →
-      </Link>   
-        <div>
+      </Link>
+
+      <div className="mb-4">
         {isFunded ? (
-          <div className="mb-4">
+          <div>
             <p className="text-green-400 font-medium">Funded: {project.fundedAmount}</p>
             <p className="text-sm text-gray-400">Approved by {project.votes} members</p>
           </div>
         ) : (
-          <div className="mb-4">
+          <div>
             <div className="flex justify-between text-sm mb-1">
               <span>Votes: {project.votes}/{project.threshold}</span>
               <span>{progress.toFixed(0)}%</span>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-2">
+            <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
               <div 
                 className="bg-purple-500 h-2 rounded-full" 
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            <p className="text-sm text-gray-400 mt-2">Requesting: {project.requestedAmount}</p>
+            <p className="text-sm text-gray-400">Requesting: {project.requestedAmount}</p>
           </div>
         )}
-        </div>
-        
-        {!isFunded && (
-          <button
-            onClick={() => onVote(project.id)}
-            className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition-colors"
-          >
-            Vote for Project
-          </button>
-        )}
       </div>
-    );
-  }
+      
+      {!isFunded && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onVote(project.id);
+          }}
+          className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+        >
+          Vote for Project
+        </button>
+      )}
+    </div>
+  );
+} 
