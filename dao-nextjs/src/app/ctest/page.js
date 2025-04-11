@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { getOrganizationDAOs, getDAO } from '@/lib/contract';
 import { ethers } from 'ethers';
 import { getContract, createDAO } from '@/lib/contract';
+import { evaluateGitHubRepo } from '../../components/score'; // Adjust the import path as necessary
 
 export default function Home() {
   const [wallet, setWallet] = useState({
@@ -98,6 +99,33 @@ export default function Home() {
       [e.target.name]: e.target.value
     });
   };
+
+  useEffect(() => {
+    example();
+  },[]);
+
+  async function example() {
+    try {
+        const evaluation = await evaluateGitHubRepo('https://github.com/facebook/react');
+        console.log(evaluation);
+        /*
+        Output will include:
+        {
+            repoName: "facebook/react",
+            category: "EXTRA_LARGE",
+            scores: { ... },
+            finalScore: 9.2,
+            details: {
+                // Detailed metrics
+            }
+        }
+        */
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+}
+
+
 
 // start of get doas and extra and up is the createdao part
   // Connect wallet and fetch DAOs

@@ -142,7 +142,7 @@ export default function Organizations() {
         onClick={connectAndFetchDAOs}
         className="bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-medium py-3 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105"
       >
-        {loading ? 'Loading...' : 'Load Your DAOs'}
+        {loading ? 'Loading...' : 'Load DAOs'}
       </button>
 
       {error && (
