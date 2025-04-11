@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import ContractJson from "@/abis/DAOFactory.json"; // path to ABI
 
-const CONTRACT_ADDRESS = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
+const CONTRACT_ADDRESS = "0x59b670e9fA9D0A427751Af201D676719a970857b";
 
 export function getContract(signerOrProvider) {
   return new ethers.Contract(CONTRACT_ADDRESS, ContractJson.abi, signerOrProvider);
