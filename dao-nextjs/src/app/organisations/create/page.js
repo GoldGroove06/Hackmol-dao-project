@@ -104,12 +104,12 @@ export default function CreateDAOPage() {
             </div>
 
             <div>
-              <label htmlFor="website" className="block text-sm font-medium text-gray-300 mb-1">Membership Fees</label>
+              <label htmlFor="Membership Fees" className="block text-sm font-medium text-gray-300 mb-1">Membership Fees</label>
               <input
-                type="text"
+                type="number"
                 id="membershipFees"
                 name="memberhsipFees"
-                value={formData.website}
+                
                 onChange={handleChange}
                 className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="$"
@@ -117,12 +117,12 @@ export default function CreateDAOPage() {
             </div>
 
             <div>
-              <label htmlFor="logo" className="block text-sm font-medium text-gray-300 mb-1">Threshold</label>
+              <label htmlFor="Threshold" className="block text-sm font-medium text-gray-300 mb-1">Threshold</label>
               <input
-                type="text"
+                type="number"
                 id="threshold"
                 name="threshold"
-                value={formData.logo}
+                
                 onChange={handleChange}
                 className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="$"
