@@ -1,7 +1,8 @@
 // src/app/organisations/components/DAOCard.js
 'use client';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
 
 export default function DAOCard({ dao }) {
   const [isJoining, setIsJoining] = useState(false);
@@ -34,27 +35,27 @@ export default function DAOCard({ dao }) {
               />
             ) : (
               <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
-                <span className="text-lg font-bold text-purple-300">{dao.name.charAt(0)}</span>
+                <span className="text-lg font-bold text-purple-300">{dao.id}</span>
               </div>
             )}
             <h2 className="text-2xl font-bold text-white">{dao.name}</h2>
           </div>
         </div>
         
-        {/* Description */}
+        {/* Description
         <p className="text-gray-300 mb-4 line-clamp-2">{dao.description}</p>
-        
-        {/* Tags */}
+         */}
+        {/* Tags
         <div className="flex flex-wrap gap-2 mb-4">
           {dao.tags.map((tag, i) => (
             <span key={i} className="bg-purple-500/10 text-purple-300 px-3 py-1 rounded-full text-xs">
               {tag}
             </span>
           ))}
-        </div>
+        </div> */}
         
         {/* Stats */}
-        <div className="grid grid-cols-2 gap-4 text-sm text-gray-400 mb-6">
+        {/* <div className="grid grid-cols-2 gap-4 text-sm text-gray-400 mb-6">
           <div className="bg-gray-700/30 p-3 rounded-lg">
             <span className="block font-medium">Members</span>
             <span className="text-white text-lg font-semibold">{dao.members.toLocaleString()}</span>
@@ -63,7 +64,7 @@ export default function DAOCard({ dao }) {
             <span className="block font-medium">Treasury</span>
             <span className="text-white text-lg font-semibold">{dao.treasury}</span>
           </div>
-        </div>
+        </div> */}
 
         {/* Action Buttons - Top Row */}
         <div className="flex gap-3">
